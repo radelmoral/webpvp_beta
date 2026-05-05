@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "import:pedidos": "node scripts/import-pedidos-maestro.js"
+    "import:pedidos": "node scripts/import-pedidos-maestro.js",
+    "export:pedidos-tiendas": "node scripts/export-estado-pedidos-tiendas-sql.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
