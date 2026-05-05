@@ -3895,45 +3895,67 @@ window.addEventListener('load', async () => {
 })();
 </script>
 <style>
-.pedv3-shell { max-width:1280px; margin:0 auto; padding:24px; }
-.pedv3-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:18px; }
-.pedv3-title h1 { font-size:22px; font-weight:800; color:var(--g900); }
-.pedv3-title p { color:var(--g500); font-size:13px; margin-top:4px; }
-.pedv3-kpis { display:flex; gap:8px; flex-wrap:wrap; }
-.pedv3-kpi { background:var(--white); border:1px solid var(--g200); border-radius:8px; padding:8px 12px; min-width:92px; }
+.pedv3-shell { max-width:1440px; margin:0 auto; padding:22px; }
+.pedv3-head { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:16px; }
+.pedv3-title h1 { font-size:24px; font-weight:850; color:var(--g900); }
+.pedv3-title p { color:var(--g500); font-size:13px; margin-top:4px; max-width:720px; }
+.pedv3-kpis { display:grid; grid-template-columns:repeat(4,minmax(105px,1fr)); gap:8px; min-width:460px; }
+.pedv3-kpi { background:var(--white); border:1px solid var(--g200); border-radius:8px; padding:10px 12px; min-width:92px; }
 .pedv3-kpi span { display:block; color:var(--g500); font-size:11px; font-weight:700; text-transform:uppercase; }
-.pedv3-kpi strong { display:block; color:var(--g900); font-size:20px; line-height:1.1; margin-top:3px; }
-.pedv3-grid { display:grid; grid-template-columns:360px minmax(0,1fr); gap:18px; align-items:start; }
+.pedv3-kpi strong { display:block; color:var(--g900); font-size:22px; line-height:1.1; margin-top:3px; }
+.pedv3-grid { display:grid; grid-template-columns:340px minmax(0,1fr); gap:16px; align-items:start; }
 .pedv3-card { background:var(--white); border:1px solid var(--g200); border-radius:8px; box-shadow:var(--sh); overflow:hidden; }
 .pedv3-card-h { padding:14px 16px; border-bottom:1px solid var(--g200); display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fbfcfd; }
 .pedv3-card-h h2 { font-size:15px; font-weight:800; color:var(--g800); }
-.pedv3-body { padding:16px; }
-.pedv3-form { display:flex; flex-direction:column; gap:12px; }
+.pedv3-card-sub { display:block; margin-top:2px; color:var(--g500); font-size:12px; font-weight:500; }
+.pedv3-body { padding:14px; }
+.pedv3-form { display:flex; flex-direction:column; gap:10px; }
 .pedv3-row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .pedv3-field label { display:block; font-size:11px; font-weight:800; color:var(--g500); margin:0 0 5px 2px; text-transform:uppercase; }
-.pedv3-field input, .pedv3-field select, .pedv3-field textarea { width:100%; border:1px solid var(--g200); border-radius:7px; padding:9px 10px; font-size:13px; outline:none; background:#fff; }
-.pedv3-field textarea { min-height:70px; resize:vertical; }
+.pedv3-field input, .pedv3-field select, .pedv3-field textarea { width:100%; border:1px solid var(--g200); border-radius:7px; padding:8px 10px; font-size:13px; outline:none; background:#fff; }
+.pedv3-field textarea { min-height:62px; resize:vertical; }
 .pedv3-field input:focus, .pedv3-field select:focus, .pedv3-field textarea:focus { border-color:var(--save); box-shadow:0 0 0 3px rgba(0,191,179,.12); }
-.pedv3-checks { border:1px solid var(--g200); border-radius:8px; padding:10px; display:flex; flex-direction:column; gap:9px; background:#fbfcfd; }
+.pedv3-checks { border:1px solid var(--g200); border-radius:8px; padding:10px; display:flex; flex-direction:column; gap:8px; background:#fbfcfd; }
 .pedv3-checks label { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--g700); }
 .pedv3-list { display:flex; flex-direction:column; gap:8px; margin-top:2px; }
 .pedv3-line { border:1px solid var(--g200); border-radius:8px; padding:10px; display:flex; justify-content:space-between; gap:8px; }
 .pedv3-line strong { display:block; font-size:13px; color:var(--g900); }
 .pedv3-line span { display:block; font-size:12px; color:var(--g500); margin-top:2px; }
-.pedv3-filters { display:flex; gap:8px; flex-wrap:wrap; }
-.pedv3-filters input, .pedv3-filters select { border:1px solid var(--g200); border-radius:7px; padding:8px 9px; font-size:12px; background:#fff; }
-.pedv3-table-wrap { overflow:auto; max-height:660px; }
-.pedv3-table { width:100%; border-collapse:collapse; font-size:12px; min-width:980px; }
-.pedv3-table th { position:sticky; top:0; z-index:1; background:#f8fafc; color:var(--g500); text-align:left; padding:10px; border-bottom:1px solid var(--g200); font-size:11px; text-transform:uppercase; }
-.pedv3-table td { padding:9px 10px; border-bottom:1px solid var(--g100); vertical-align:top; }
-.pedv3-table input, .pedv3-table select { width:100%; border:1px solid var(--g200); border-radius:6px; padding:6px; font-size:12px; }
-.pedv3-status { display:inline-flex; align-items:center; border-radius:999px; padding:3px 8px; font-size:11px; font-weight:800; text-transform:uppercase; }
+.pedv3-workbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border-bottom:1px solid var(--g200); background:#fff; }
+.pedv3-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+.pedv3-tab { border:1px solid var(--g200); background:#fff; border-radius:7px; padding:7px 10px; color:var(--g700); font-size:12px; font-weight:800; cursor:pointer; }
+.pedv3-tab.on { background:var(--save-xlt); border-color:var(--save); color:var(--save-dkk); }
+.pedv3-live { display:flex; align-items:center; gap:8px; color:var(--g500); font-size:12px; white-space:nowrap; }
+.pedv3-dot { width:8px; height:8px; border-radius:999px; background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.14); }
+.pedv3-dot.loading { background:#f59e0b; box-shadow:0 0 0 4px rgba(245,158,11,.16); }
+.pedv3-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px 14px; border-bottom:1px solid var(--g200); background:#fbfcfd; }
+.pedv3-filters input, .pedv3-filters select { border:1px solid var(--g200); border-radius:7px; padding:8px 9px; font-size:12px; background:#fff; min-height:34px; }
+.pedv3-filters input { min-width:240px; flex:1; }
+.pedv3-table-wrap { overflow-x:auto; overflow-y:visible; max-height:none; }
+.pedv3-table { width:100%; border-collapse:separate; border-spacing:0; font-size:12px; min-width:1120px; }
+.pedv3-table th { position:sticky; top:0; z-index:1; background:#f8fafc; color:var(--g500); text-align:left; padding:10px 12px; border-bottom:1px solid var(--g200); font-size:11px; text-transform:uppercase; }
+.pedv3-table td { padding:11px 12px; border-bottom:1px solid var(--g100); vertical-align:top; background:#fff; }
+.pedv3-table tr:hover td { background:#fbfcfd; }
+.pedv3-table tr.pedv3-row-new td { background:#f0fdfa; }
+.pedv3-table input, .pedv3-table select { width:100%; border:1px solid var(--g200); border-radius:6px; padding:7px; font-size:12px; background:#fff; }
+.pedv3-table textarea { width:100%; min-height:54px; border:1px solid var(--g200); border-radius:6px; padding:7px; font-size:12px; resize:vertical; background:#fff; }
+.pedv3-mainref { font-weight:850; color:var(--g900); font-size:13px; }
+.pedv3-desc { color:var(--g500); font-size:12px; margin-top:3px; max-width:330px; }
+.pedv3-meta { color:var(--g500); font-size:11px; margin-top:4px; }
+.pedv3-store { font-weight:850; color:var(--g800); }
+.pedv3-date { color:var(--g700); font-weight:750; white-space:nowrap; }
+.pedv3-chip { display:inline-flex; align-items:center; border:1px solid var(--g200); border-radius:999px; padding:4px 7px; color:var(--g600); font-size:11px; font-weight:800; background:#fff; margin-top:4px; }
+.pedv3-num { max-width:82px; }
+.pedv3-provider { min-width:130px; }
+.pedv3-status { display:inline-flex; align-items:center; border-radius:999px; padding:4px 8px; font-size:11px; font-weight:850; text-transform:uppercase; white-space:nowrap; }
 .pedv3-st-pendiente { background:#fef3c7; color:#92400e; }
 .pedv3-st-pedido { background:#dcfce7; color:#166534; }
 .pedv3-st-cancelado { background:#fee2e2; color:#991b1b; }
 .pedv3-st-sin_stock { background:#e0f2fe; color:#075985; }
 .pedv3-empty { padding:50px 16px; text-align:center; color:var(--g500); }
-@media (max-width: 980px) { .pedv3-grid { grid-template-columns:1fr; } .pedv3-head { flex-direction:column; } }
+.pedv3-admin-note { color:var(--g500); font-size:12px; line-height:1.4; }
+@media (max-width: 1180px) { .pedv3-grid { grid-template-columns:1fr; } .pedv3-kpis { min-width:0; width:100%; } }
+@media (max-width: 720px) { .pedv3-shell { padding:14px; } .pedv3-head, .pedv3-workbar { flex-direction:column; align-items:stretch; } .pedv3-kpis { grid-template-columns:repeat(2,1fr); } }
 </style>
 
 <script>
@@ -3960,6 +3982,11 @@ window.addEventListener('load', async () => {
     pedidos: [],
     resumen: { total: 0, estados: {} },
     loading: false,
+    autoLoading: false,
+    lastLoadedAt: null,
+    seenIds: new Set(),
+    refreshTimer: null,
+    lastPendingCount: null,
     filters: { estado: 'pendiente', tienda: '', q: '' },
   };
 
@@ -3989,7 +4016,7 @@ window.addEventListener('load', async () => {
         <div class="pedv3-head">
           <div class="pedv3-title">
             <h1>Gestión de Pedidos</h1>
-            <p>Pedidos internos con seguimiento en tiempo real, sin Google Sheets ni Apps Script.</p>
+            <p>Alta, seguimiento y gestión de compras en MariaDB. El panel se refresca automáticamente para que el admin vea pedidos nuevos sin recargar la página.</p>
           </div>
           <div class="pedv3-kpis">
             <div class="pedv3-kpi"><span>Total</span><strong id="pedv3-kpi-total">0</strong></div>
@@ -4001,7 +4028,9 @@ window.addEventListener('load', async () => {
 
         <div class="pedv3-grid">
           <div class="pedv3-card">
-            <div class="pedv3-card-h"><h2>Nuevo pedido</h2><span class="muted" id="pedv3-user-store"></span></div>
+            <div class="pedv3-card-h">
+              <div><h2>Nuevo pedido</h2><span class="pedv3-card-sub" id="pedv3-user-store"></span></div>
+            </div>
             <div class="pedv3-body">
               <form class="pedv3-form" id="pedv3-form">
                 <div class="pedv3-field">
@@ -4038,13 +4067,26 @@ window.addEventListener('load', async () => {
 
           <div class="pedv3-card">
             <div class="pedv3-card-h">
-              <h2>Seguimiento</h2>
-              <div class="pedv3-filters">
-                <select id="pedv3-filter-estado"><option value="">Todos</option>${options(ESTADOS_PEDIDOS, state.filters.estado)}</select>
-                <select id="pedv3-filter-tienda" style="display:none;"><option value="">Todas las tiendas</option>${options(TIENDAS_PEDIDOS)}</select>
-                <input id="pedv3-filter-q" placeholder="Buscar referencia, proveedor...">
-                <button class="btn btn-o" id="pedv3-refresh" type="button">Actualizar</button>
+              <div>
+                <h2>Seguimiento de pedidos</h2>
+                <span class="pedv3-card-sub" id="pedv3-list-count">Cargando...</span>
               </div>
+              <div class="pedv3-live"><span class="pedv3-dot" id="pedv3-live-dot"></span><span id="pedv3-live-text">Autoactualización activa</span></div>
+            </div>
+            <div class="pedv3-workbar">
+              <div class="pedv3-tabs" id="pedv3-tabs">
+                <button class="pedv3-tab" type="button" data-estado="pendiente" data-label="Pendientes">Pendientes</button>
+                <button class="pedv3-tab" type="button" data-estado="pedido" data-label="Pedidos">Pedidos</button>
+                <button class="pedv3-tab" type="button" data-estado="sin_stock" data-label="Sin stock">Sin stock</button>
+                <button class="pedv3-tab" type="button" data-estado="cancelado" data-label="Cancelados">Cancelados</button>
+                <button class="pedv3-tab" type="button" data-estado="" data-label="Todos">Todos</button>
+              </div>
+              <div class="pedv3-admin-note">${isAdmin() ? 'Edita costes, logística y estado directamente en la fila.' : 'Consulta el estado de tus pedidos y crea nuevas solicitudes desde el panel izquierdo.'}</div>
+            </div>
+            <div class="pedv3-filters">
+              <select id="pedv3-filter-tienda" style="display:none;"><option value="">Todas las tiendas</option>${options(TIENDAS_PEDIDOS)}</select>
+              <input id="pedv3-filter-q" placeholder="Buscar por referencia, descripción, proveedor u observaciones...">
+              <button class="btn btn-o" id="pedv3-refresh" type="button">Actualizar ahora</button>
             </div>
             <div class="pedv3-table-wrap" id="pedv3-table"></div>
           </div>
@@ -4059,7 +4101,7 @@ window.addEventListener('load', async () => {
   function bindEvents() {
     byId('pedv3-form')?.addEventListener('submit', addLinea);
     byId('pedv3-enviar')?.addEventListener('click', enviarPedido);
-    byId('pedv3-refresh')?.addEventListener('click', loadPedidos);
+    byId('pedv3-refresh')?.addEventListener('click', () => loadPedidos({ manual: true }));
     byId('pedv3-proveedor')?.addEventListener('change', () => {
       byId('pedv3-stock-wrap').style.display = value('pedv3-proveedor') === 'Stock red' ? '' : 'none';
     });
@@ -4070,17 +4112,24 @@ window.addEventListener('load', async () => {
       byId('pedv3-factura-wrap').style.display = checked('pedv3-deposito') ? '' : 'none';
       byId('pedv3-presu-wrap').style.display = checked('pedv3-terminal') && !checked('pedv3-deposito') ? '' : 'none';
     });
-    ['pedv3-filter-estado', 'pedv3-filter-tienda'].forEach(id => {
+    byId('pedv3-tabs')?.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-estado]');
+      if (!btn) return;
+      state.filters.estado = btn.dataset.estado || '';
+      renderTabs();
+      loadPedidos({ manual: true });
+    });
+    ['pedv3-filter-tienda'].forEach(id => {
       byId(id)?.addEventListener('change', () => {
-        state.filters.estado = value('pedv3-filter-estado');
         state.filters.tienda = value('pedv3-filter-tienda');
-        loadPedidos();
+        loadPedidos({ manual: true });
       });
     });
     byId('pedv3-filter-q')?.addEventListener('input', debounce(() => {
       state.filters.q = value('pedv3-filter-q');
-      loadPedidos();
+      loadPedidos({ manual: true });
     }, 250));
+    renderTabs();
   }
 
   function syncRoleUi() {
@@ -4100,6 +4149,26 @@ window.addEventListener('load', async () => {
       tiendaSelect.innerHTML = '<option value="">Selecciona tienda</option>' + options(TIENDAS_PEDIDOS);
       tiendaSelect.disabled = false;
     }
+  }
+
+  function renderTabs() {
+    document.querySelectorAll('#pedv3-tabs .pedv3-tab').forEach(btn => {
+      btn.classList.toggle('on', (btn.dataset.estado || '') === state.filters.estado);
+      const estado = btn.dataset.estado || '';
+      const key = estado || 'total';
+      const total = key === 'total'
+        ? state.resumen.total
+        : (state.resumen.estados?.[key] || 0);
+      const label = btn.dataset.label || btn.textContent.replace(/\s+\d+$/, '');
+      btn.textContent = `${label} ${total || 0}`;
+    });
+  }
+
+  function updateLiveStatus(text, loading = false) {
+    const dot = byId('pedv3-live-dot');
+    const label = byId('pedv3-live-text');
+    if (dot) dot.classList.toggle('loading', loading);
+    if (label) label.textContent = text;
   }
 
   function addLinea(e) {
@@ -4167,7 +4236,7 @@ window.addEventListener('load', async () => {
       await API.pedidos.crear(state.lineas);
       state.lineas = [];
       renderLines();
-      await loadPedidos();
+      await loadPedidos({ manual: true });
       toast('Pedido enviado correctamente', 'ok');
     } catch (err) {
       alert(err.message || 'Error enviando pedido');
@@ -4186,21 +4255,46 @@ window.addEventListener('load', async () => {
     } catch (_) {}
   }
 
-  async function loadPedidos() {
+  async function loadPedidos(options = {}) {
     if (!API_AVAILABLE || !API.getToken()) return;
+    const silent = Boolean(options.silent);
+    const manual = Boolean(options.manual);
+    if (silent && state.autoLoading) return;
+    state.autoLoading = silent;
+    if (silent || manual) updateLiveStatus('Comprobando pedidos...', true);
     try {
-      const params = { limit: 200 };
+      const params = { limit: 500 };
       if (state.filters.estado) params.estado = state.filters.estado;
       if (isAdmin() && state.filters.tienda) params.tienda = state.filters.tienda;
       if (state.filters.q) params.q = state.filters.q;
       const [list, resumen] = await Promise.all([API.pedidos.listar(params), API.pedidos.resumen()]);
-      state.pedidos = list.data || [];
+      const incoming = list.data || [];
+      const previousPending = state.lastPendingCount;
+      const currentPending = Number(resumen?.estados?.pendiente || 0);
+      const incomingIds = new Set(incoming.map(p => Number(p.id)));
+      const newIds = state.seenIds.size
+        ? incoming.filter(p => !state.seenIds.has(Number(p.id))).map(p => Number(p.id))
+        : [];
+      state.seenIds = incomingIds;
+      state.pedidos = incoming;
       state.resumen = resumen || { total: 0, estados: {} };
+      state.lastPendingCount = currentPending;
+      state.lastLoadedAt = new Date();
       renderKpis();
+      renderTabs();
       renderTable();
+      updateLiveStatus(`Actualizado ${state.lastLoadedAt.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`, false);
+      const pendingDelta = previousPending === null ? 0 : currentPending - Number(previousPending || 0);
+      if (silent && isAdmin() && (newIds.length || pendingDelta > 0)) {
+        const amount = pendingDelta > 0 ? pendingDelta : newIds.length;
+        toast(`${amount} pedido${amount === 1 ? '' : 's'} nuevo${amount === 1 ? '' : 's'}`, 'ok');
+      }
     } catch (err) {
       const box = byId('pedv3-table');
       if (box) box.innerHTML = `<div class="pedv3-empty">No se pudieron cargar los pedidos: ${escHTML(err.message)}</div>`;
+      updateLiveStatus('Error al actualizar', false);
+    } finally {
+      state.autoLoading = false;
     }
   }
 
@@ -4214,6 +4308,8 @@ window.addEventListener('load', async () => {
   function renderTable() {
     const box = byId('pedv3-table');
     if (!box) return;
+    const count = byId('pedv3-list-count');
+    if (count) count.textContent = `${state.pedidos.length} filas en vista · ${state.filters.estado ? statusLabel(state.filters.estado) : 'Todos los estados'}`;
     if (!state.pedidos.length) {
       box.innerHTML = '<div class="pedv3-empty">No hay pedidos para este filtro.</div>';
       return;
@@ -4222,9 +4318,9 @@ window.addEventListener('load', async () => {
       <table class="pedv3-table">
         <thead>
           <tr>
-            <th>Fecha</th><th>Tienda</th><th>Referencia</th><th>Uds</th><th>Proveedor</th>
-            ${isAdmin() ? '<th>Coste</th><th>Logística</th>' : ''}
-            <th>Datos reparación</th><th>Observaciones</th><th>Estado</th>${isAdmin() ? '<th></th>' : ''}
+            <th>Entrada</th><th>Tienda</th><th>Pieza</th><th>Uds</th><th>Proveedor</th>
+            ${isAdmin() ? '<th>Compra</th><th>Logística</th>' : ''}
+            <th>Reparación</th><th>Nota</th><th>Estado</th>${isAdmin() ? '<th>Acción</th>' : ''}
           </tr>
         </thead>
         <tbody>${state.pedidos.map(renderPedidoRow).join('')}</tbody>
@@ -4240,10 +4336,10 @@ window.addEventListener('load', async () => {
     if (!isAdmin()) {
       return `
         <tr>
-          <td>${formatDate(p.fecha_envio)}<br><span class="muted">${escHTML(p.hora_envio || '')}</span></td>
-          <td>${escHTML(p.tienda_origen)}</td>
-          <td><strong>${escHTML(p.referencia)}</strong><br><span class="muted">${escHTML(p.etiqueta || '')}</span></td>
-          <td>${Number(p.unidades || 0)}</td>
+          <td><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></td>
+          <td><div class="pedv3-store">${escHTML(p.tienda_origen)}</div></td>
+          <td><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div></td>
+          <td><span class="pedv3-chip">${Number(p.unidades || 0)} uds</span></td>
           <td>${escHTML(p.proveedor || '-')}</td>
           <td>${detalle}</td>
           <td>${escHTML(p.observaciones || '-')}</td>
@@ -4251,16 +4347,16 @@ window.addEventListener('load', async () => {
         </tr>`;
     }
     return `
-      <tr>
-        <td>${formatDate(p.fecha_envio)}<br><span class="muted">${escHTML(p.hora_envio || '')}</span></td>
-        <td>${escHTML(p.tienda_origen)}</td>
-        <td><strong>${escHTML(p.referencia)}</strong><br><span class="muted">${escHTML(p.etiqueta || '')}</span></td>
-        <td>${Number(p.unidades || 0)}</td>
-        <td><input id="pedv3-prov-${p.id}" value="${escHTML(p.proveedor || '')}"></td>
-        <td><input id="pedv3-coste-${p.id}" type="number" step="0.01" value="${money(p.coste_gsm)}"></td>
-        <td><input id="pedv3-log-${p.id}" type="number" step="0.01" value="${money(p.logistica_gsm || p.logistica_interna)}"></td>
+      <tr class="${p.estado === 'pendiente' ? 'pedv3-row-new' : ''}">
+        <td><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></td>
+        <td><div class="pedv3-store">${escHTML(p.tienda_origen)}</div></td>
+        <td><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div>${p.pvp_reparacion ? `<div class="pedv3-meta">PVP reparación: ${money(p.pvp_reparacion)} €</div>` : ''}</td>
+        <td><span class="pedv3-chip">${Number(p.unidades || 0)} uds</span></td>
+        <td><input class="pedv3-provider" id="pedv3-prov-${p.id}" value="${escHTML(p.proveedor || '')}"></td>
+        <td><input class="pedv3-num" id="pedv3-coste-${p.id}" type="number" step="0.01" value="${money(p.coste_gsm)}"></td>
+        <td><input class="pedv3-num" id="pedv3-log-${p.id}" type="number" step="0.01" value="${money(p.logistica_gsm || p.logistica_interna)}"></td>
         <td>${detalle}</td>
-        <td><input id="pedv3-obs-${p.id}" value="${escHTML(p.observaciones || '')}"></td>
+        <td><textarea id="pedv3-obs-${p.id}">${escHTML(p.observaciones || '')}</textarea></td>
         <td><select id="pedv3-estado-${p.id}">${options(ESTADOS_PEDIDOS, p.estado)}</select>${p.fecha_realizado ? `<br><span class="muted">${formatDate(p.fecha_realizado)}</span>` : ''}</td>
         <td><button class="btn btn-p" type="button" onclick="PedidosV3.save(${p.id})">Guardar</button></td>
       </tr>`;
@@ -4275,7 +4371,7 @@ window.addEventListener('load', async () => {
         observaciones: value(`pedv3-obs-${id}`),
         estado: value(`pedv3-estado-${id}`),
       });
-      await loadPedidos();
+      await loadPedidos({ manual: true });
       toast('Pedido actualizado', 'ok');
     } catch (err) {
       alert(err.message || 'Error actualizando pedido');
@@ -4308,17 +4404,33 @@ window.addEventListener('load', async () => {
 
   renderShell();
 
+  function startPedidosAutoRefresh() {
+    if (state.refreshTimer) clearInterval(state.refreshTimer);
+    state.refreshTimer = setInterval(() => {
+      if (document.hidden) return;
+      loadPedidos({ silent: true });
+    }, 15000);
+  }
+
   async function boot() {
     renderShell();
     await loadUser();
-    await loadPedidos();
+    await loadPedidos({ manual: true });
+    startPedidosAutoRefresh();
   }
 
   window.addEventListener('save-role-change', async (ev) => {
     state.role = ev.detail?.role || state.role;
     await loadUser();
     syncRoleUi();
-    await loadPedidos();
+    await loadPedidos({ manual: true });
+    startPedidosAutoRefresh();
+  });
+  window.addEventListener('visibilitychange', () => {
+    if (!document.hidden) loadPedidos({ silent: true });
+  });
+  window.addEventListener('beforeunload', () => {
+    if (state.refreshTimer) clearInterval(state.refreshTimer);
   });
   window.addEventListener('load', () => setTimeout(boot, 250));
 })();
