@@ -3951,12 +3951,12 @@ window.addEventListener('load', async () => {
 .pedv3-order-row.pedv3-row-pedido { border-left:4px solid #22c55e; background:#f0fdf4; }
 .pedv3-order-row.pedv3-row-sin_stock { border-left:4px solid #eab308; background:#fefce8; }
 .pedv3-order-row.pedv3-row-cancelado { border-left:4px solid #ef4444; background:#fef2f2; }
-.pedv3-store-group { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 10px; margin-top:5px; border:1px solid color-mix(in srgb, var(--store-color, #0f766e) 34%, #dbe3ec); border-left:5px solid var(--store-color, #0f766e); border-radius:8px; background:linear-gradient(90deg, color-mix(in srgb, var(--store-color, #0f766e) 12%, #fff), #fff); }
+.pedv3-store-group { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 10px; margin-top:5px; border:1px solid #dbe3ec; border-left:4px solid #0f766e; border-radius:8px; background:#f8fafc; }
 .pedv3-store-group:first-of-type { margin-top:0; }
 .pedv3-store-group strong { color:var(--g900); font-size:12px; font-weight:900; }
 .pedv3-store-group span { color:var(--g500); font-size:11px; font-weight:800; }
-.pedv3-store-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 7px; border:1px solid color-mix(in srgb, var(--store-color, #0f766e) 32%, #dbe3ec); border-radius:999px; background:color-mix(in srgb, var(--store-color, #0f766e) 10%, #fff); }
-.pedv3-store-dot { width:7px; height:7px; border-radius:999px; background:var(--store-color, #0f766e); box-shadow:0 0 0 3px color-mix(in srgb, var(--store-color, #0f766e) 16%, transparent); }
+.pedv3-store-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 7px; border:1px solid #dbe3ec; border-radius:999px; background:#fff; }
+.pedv3-store-dot { width:7px; height:7px; border-radius:999px; background:#0f766e; box-shadow:0 0 0 3px rgba(15,118,110,.12); }
 .pedv3-shop-row { display:grid; grid-template-columns:78px minmax(115px,.9fr) minmax(100px,.75fr) minmax(190px,1.5fr) 72px 50px minmax(126px,1fr) minmax(170px,1.25fr) minmax(145px,1fr) 108px; }
 .pedv3-order-row input, .pedv3-order-row select, .pedv3-order-row textarea { width:100%; border:1px solid #d7e0e9; border-radius:6px; padding:6px 7px; font-size:11px; line-height:1.25; background:#fff; outline:none; }
 .pedv3-order-row input:focus, .pedv3-order-row select:focus, .pedv3-order-row textarea:focus { border-color:#0f766e; box-shadow:0 0 0 3px rgba(15,118,110,.12); }
@@ -4384,17 +4384,10 @@ window.addEventListener('load', async () => {
       ? `${total} pendiente${total === 1 ? '' : 's'}`
       : `${total} pedido${total === 1 ? '' : 's'} · ${pending} pendiente${pending === 1 ? '' : 's'}`;
     return `
-      <div class="pedv3-store-group" style="--store-color:${storeColor(store, index)}">
+      <div class="pedv3-store-group">
         <strong>${escHTML(store)}</strong>
         <span>${suffix}</span>
       </div>`;
-  }
-
-  function storeColor(store, index = 0) {
-    const colors = ['#0f766e', '#2563eb', '#7c3aed', '#db2777', '#ea580c', '#16a34a', '#0891b2', '#9333ea', '#be123c', '#4f46e5'];
-    let hash = Number(index) || 0;
-    for (const char of String(store || '')) hash = ((hash << 5) - hash) + char.charCodeAt(0);
-    return colors[Math.abs(hash) % colors.length];
   }
 
   function sortedPedidosForAdmin(pedidos) {
@@ -4431,7 +4424,7 @@ window.addEventListener('load', async () => {
     return `
       <div class="pedv3-order-row pedv3-row-${escHTML(p.estado || 'pendiente')}">
         <div><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></div>
-        <div class="pedv3-store"><span class="pedv3-store-pill" style="--store-color:${storeColor(p.tienda_origen)}"><span class="pedv3-store-dot"></span>${escHTML(p.tienda_origen)}</span></div>
+        <div class="pedv3-store"><span class="pedv3-store-pill"><span class="pedv3-store-dot"></span>${escHTML(p.tienda_origen)}</span></div>
         <div class="pedv3-mainref">${escHTML(p.referencia)}</div>
         <div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div>
         <div class="pedv3-meta">${p.pvp_reparacion ? `${money(p.pvp_reparacion)} €` : '-'}</div>
