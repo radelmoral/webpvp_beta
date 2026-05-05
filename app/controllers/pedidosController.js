@@ -156,13 +156,16 @@ async function listar(req, res) {
 
     const whereSQL = where.length ? `WHERE ${where.join(' AND ')}` : '';
     const [countRows] = await db.execute(`SELECT COUNT(*) AS total FROM pedidos p ${whereSQL}`, params);
+    const orderSQL = req.user.rol === 'admin'
+      ? 'ORDER BY p.tienda_origen ASC, COALESCE(p.fecha_envio, DATE(p.created_at)) DESC, p.id DESC'
+      : 'ORDER BY COALESCE(p.fecha_envio, DATE(p.created_at)) DESC, p.id DESC';
     const [rows] = await db.execute(
       `SELECT p.*, uc.nombre AS creado_por, uu.nombre AS actualizado_por
          FROM pedidos p
          LEFT JOIN usuarios uc ON p.created_by = uc.id_usuario
          LEFT JOIN usuarios uu ON p.updated_by = uu.id_usuario
         ${whereSQL}
-        ORDER BY COALESCE(p.fecha_envio, DATE(p.created_at)) DESC, p.id DESC
+        ${orderSQL}
         LIMIT ? OFFSET ?`,
       [...params, limit, offset]
     );
