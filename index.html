@@ -3895,17 +3895,18 @@ window.addEventListener('load', async () => {
 })();
 </script>
 <style>
-.pedv3-shell { max-width:1440px; margin:0 auto; padding:22px; }
-.pedv3-head { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:16px; }
-.pedv3-title h1 { font-size:24px; font-weight:850; color:var(--g900); }
-.pedv3-title p { color:var(--g500); font-size:13px; margin-top:4px; max-width:720px; }
-.pedv3-kpis { display:grid; grid-template-columns:repeat(4,minmax(105px,1fr)); gap:8px; min-width:460px; }
-.pedv3-kpi { background:var(--white); border:1px solid var(--g200); border-radius:8px; padding:10px 12px; min-width:92px; }
+.pedv3-shell { max-width:1680px; margin:0 auto; padding:16px; background:#f6f8fb; }
+.pedv3-head { display:grid; grid-template-columns:minmax(260px,1fr) minmax(420px,620px); align-items:start; gap:14px; margin-bottom:12px; }
+.pedv3-title h1 { font-size:22px; font-weight:900; color:var(--g900); letter-spacing:0; }
+.pedv3-title p { color:var(--g500); font-size:12px; margin-top:3px; max-width:720px; }
+.pedv3-kpis { display:grid; grid-template-columns:repeat(4,minmax(96px,1fr)); gap:8px; min-width:0; }
+.pedv3-kpi { background:var(--white); border:1px solid #dbe3ec; border-radius:8px; padding:9px 11px; min-width:92px; box-shadow:0 8px 22px rgba(15,23,42,.04); }
 .pedv3-kpi span { display:block; color:var(--g500); font-size:11px; font-weight:700; text-transform:uppercase; }
-.pedv3-kpi strong { display:block; color:var(--g900); font-size:22px; line-height:1.1; margin-top:3px; }
+.pedv3-kpi strong { display:block; color:var(--g900); font-size:20px; line-height:1.1; margin-top:2px; }
 .pedv3-grid { display:grid; grid-template-columns:340px minmax(0,1fr); gap:16px; align-items:start; }
-.pedv3-card { background:var(--white); border:1px solid var(--g200); border-radius:8px; box-shadow:var(--sh); overflow:hidden; }
-.pedv3-card-h { padding:14px 16px; border-bottom:1px solid var(--g200); display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fbfcfd; }
+.pedv3-grid.pedv3-admin-grid { grid-template-columns:1fr; }
+.pedv3-card { background:var(--white); border:1px solid #dbe3ec; border-radius:8px; box-shadow:0 14px 36px rgba(15,23,42,.06); overflow:hidden; }
+.pedv3-card-h { padding:12px 14px; border-bottom:1px solid #e3e9f0; display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fff; }
 .pedv3-card-h h2 { font-size:15px; font-weight:800; color:var(--g800); }
 .pedv3-card-sub { display:block; margin-top:2px; color:var(--g500); font-size:12px; font-weight:500; }
 .pedv3-body { padding:14px; }
@@ -3921,32 +3922,35 @@ window.addEventListener('load', async () => {
 .pedv3-line { border:1px solid var(--g200); border-radius:8px; padding:10px; display:flex; justify-content:space-between; gap:8px; }
 .pedv3-line strong { display:block; font-size:13px; color:var(--g900); }
 .pedv3-line span { display:block; font-size:12px; color:var(--g500); margin-top:2px; }
-.pedv3-workbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border-bottom:1px solid var(--g200); background:#fff; }
+.pedv3-workbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-bottom:1px solid #e3e9f0; background:#fbfcfe; }
 .pedv3-tabs { display:flex; gap:6px; flex-wrap:wrap; }
-.pedv3-tab { border:1px solid var(--g200); background:#fff; border-radius:7px; padding:7px 10px; color:var(--g700); font-size:12px; font-weight:800; cursor:pointer; }
-.pedv3-tab.on { background:var(--save-xlt); border-color:var(--save); color:var(--save-dkk); }
+.pedv3-tab { border:1px solid #dbe3ec; background:#fff; border-radius:7px; padding:7px 10px; color:var(--g700); font-size:12px; font-weight:800; cursor:pointer; }
+.pedv3-tab.on { background:#0f766e; border-color:#0f766e; color:#fff; box-shadow:0 8px 16px rgba(15,118,110,.18); }
 .pedv3-live { display:flex; align-items:center; gap:8px; color:var(--g500); font-size:12px; white-space:nowrap; }
 .pedv3-dot { width:8px; height:8px; border-radius:999px; background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.14); }
 .pedv3-dot.loading { background:#f59e0b; box-shadow:0 0 0 4px rgba(245,158,11,.16); }
-.pedv3-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px 14px; border-bottom:1px solid var(--g200); background:#fbfcfd; }
+.pedv3-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:10px 14px; border-bottom:1px solid #e3e9f0; background:#f8fafc; }
 .pedv3-filters input, .pedv3-filters select { border:1px solid var(--g200); border-radius:7px; padding:8px 9px; font-size:12px; background:#fff; min-height:34px; }
 .pedv3-filters input { min-width:240px; flex:1; }
-.pedv3-table-wrap { overflow-x:auto; overflow-y:visible; max-height:none; }
-.pedv3-table { width:100%; border-collapse:separate; border-spacing:0; font-size:12px; min-width:1120px; }
-.pedv3-table th { position:sticky; top:0; z-index:1; background:#f8fafc; color:var(--g500); text-align:left; padding:10px 12px; border-bottom:1px solid var(--g200); font-size:11px; text-transform:uppercase; }
-.pedv3-table td { padding:11px 12px; border-bottom:1px solid var(--g100); vertical-align:top; background:#fff; }
-.pedv3-table tr:hover td { background:#fbfcfd; }
-.pedv3-table tr.pedv3-row-new td { background:#f0fdfa; }
-.pedv3-table input, .pedv3-table select { width:100%; border:1px solid var(--g200); border-radius:6px; padding:7px; font-size:12px; background:#fff; }
-.pedv3-table textarea { width:100%; min-height:54px; border:1px solid var(--g200); border-radius:6px; padding:7px; font-size:12px; resize:vertical; background:#fff; }
+.pedv3-table-wrap { overflow:visible; max-height:none; background:#f6f8fb; }
+.pedv3-order-list { display:flex; flex-direction:column; gap:6px; padding:8px; }
+.pedv3-order-head, .pedv3-order-row { display:grid; grid-template-columns:74px 124px minmax(170px,1.5fr) 56px minmax(122px,.8fr) 84px 84px 112px minmax(150px,1fr) 116px 72px; gap:7px; align-items:center; }
+.pedv3-order-head { position:sticky; top:0; z-index:2; padding:7px 9px; color:var(--g500); font-size:10px; font-weight:900; text-transform:uppercase; background:#eef3f7; border:1px solid #dbe3ec; border-radius:7px; }
+.pedv3-order-row { min-height:54px; padding:7px 9px; background:#fff; border:1px solid #dbe3ec; border-radius:8px; box-shadow:0 6px 16px rgba(15,23,42,.035); }
+.pedv3-order-row:hover { border-color:#b9c7d6; box-shadow:0 10px 24px rgba(15,23,42,.07); }
+.pedv3-order-row.pedv3-row-new { border-left:4px solid #0f766e; background:#f4fffc; }
+.pedv3-shop-row { display:grid; grid-template-columns:80px minmax(125px,1fr) minmax(190px,1.6fr) 58px minmax(132px,1fr) minmax(120px,1fr) minmax(150px,1.1fr) 112px; }
+.pedv3-order-row input, .pedv3-order-row select, .pedv3-order-row textarea { width:100%; border:1px solid #d7e0e9; border-radius:6px; padding:6px 7px; font-size:12px; background:#fff; outline:none; }
+.pedv3-order-row input:focus, .pedv3-order-row select:focus, .pedv3-order-row textarea:focus { border-color:#0f766e; box-shadow:0 0 0 3px rgba(15,118,110,.12); }
+.pedv3-order-row textarea { min-height:38px; max-height:70px; resize:vertical; }
 .pedv3-mainref { font-weight:850; color:var(--g900); font-size:13px; }
-.pedv3-desc { color:var(--g500); font-size:12px; margin-top:3px; max-width:330px; }
-.pedv3-meta { color:var(--g500); font-size:11px; margin-top:4px; }
+.pedv3-desc { color:var(--g500); font-size:11px; margin-top:2px; max-width:100%; line-height:1.25; }
+.pedv3-meta { color:var(--g500); font-size:10px; margin-top:2px; line-height:1.25; }
 .pedv3-store { font-weight:850; color:var(--g800); }
-.pedv3-date { color:var(--g700); font-weight:750; white-space:nowrap; }
-.pedv3-chip { display:inline-flex; align-items:center; border:1px solid var(--g200); border-radius:999px; padding:4px 7px; color:var(--g600); font-size:11px; font-weight:800; background:#fff; margin-top:4px; }
-.pedv3-num { max-width:82px; }
-.pedv3-provider { min-width:130px; }
+.pedv3-date { color:var(--g700); font-weight:800; white-space:nowrap; font-size:11px; }
+.pedv3-chip { display:inline-flex; align-items:center; justify-content:center; border:1px solid #dbe3ec; border-radius:999px; padding:4px 7px; color:var(--g600); font-size:11px; font-weight:850; background:#fff; }
+.pedv3-num { text-align:right; }
+.pedv3-action { min-width:0; padding-inline:8px; justify-content:center; }
 .pedv3-status { display:inline-flex; align-items:center; border-radius:999px; padding:4px 8px; font-size:11px; font-weight:850; text-transform:uppercase; white-space:nowrap; }
 .pedv3-st-pendiente { background:#fef3c7; color:#92400e; }
 .pedv3-st-pedido { background:#dcfce7; color:#166534; }
@@ -3954,7 +3958,8 @@ window.addEventListener('load', async () => {
 .pedv3-st-sin_stock { background:#e0f2fe; color:#075985; }
 .pedv3-empty { padding:50px 16px; text-align:center; color:var(--g500); }
 .pedv3-admin-note { color:var(--g500); font-size:12px; line-height:1.4; }
-@media (max-width: 1180px) { .pedv3-grid { grid-template-columns:1fr; } .pedv3-kpis { min-width:0; width:100%; } }
+@media (max-width: 1380px) { .pedv3-order-head, .pedv3-order-row { grid-template-columns:72px 112px minmax(150px,1.4fr) 52px minmax(110px,.75fr) 76px 76px 104px minmax(120px,1fr) 106px 68px; gap:5px; } .pedv3-order-row input, .pedv3-order-row select, .pedv3-order-row textarea { font-size:11px; padding:5px 6px; } }
+@media (max-width: 1180px) { .pedv3-grid { grid-template-columns:1fr; } .pedv3-kpis { min-width:0; width:100%; } .pedv3-head { grid-template-columns:1fr; } .pedv3-order-head { display:none; } .pedv3-order-row { grid-template-columns:1fr 1fr; align-items:start; } }
 @media (max-width: 720px) { .pedv3-shell { padding:14px; } .pedv3-head, .pedv3-workbar { flex-direction:column; align-items:stretch; } .pedv3-kpis { grid-template-columns:repeat(2,1fr); } }
 </style>
 
@@ -3994,6 +3999,12 @@ window.addEventListener('load', async () => {
     const n = Number(value);
     return Number.isFinite(n) ? n.toFixed(2) : '';
   };
+  const moneyInput = value => {
+    if (value === null || value === undefined || value === '') return '';
+    const n = Number(value);
+    if (!Number.isFinite(n) || n === 0) return '';
+    return n.toFixed(2);
+  };
 
   const statusLabel = estado => (ESTADOS_PEDIDOS.find(e => e[0] === estado)?.[1] || estado || 'Pendiente');
   const isAdmin = () => state.role === 'admin';
@@ -4026,8 +4037,8 @@ window.addEventListener('load', async () => {
           </div>
         </div>
 
-        <div class="pedv3-grid">
-          <div class="pedv3-card">
+        <div class="pedv3-grid ${isAdmin() ? 'pedv3-admin-grid' : ''}">
+          <div class="pedv3-card pedv3-order-form" ${isAdmin() ? 'style="display:none;"' : ''}>
             <div class="pedv3-card-h">
               <div><h2>Nuevo pedido</h2><span class="pedv3-card-sub" id="pedv3-user-store"></span></div>
             </div>
@@ -4314,18 +4325,17 @@ window.addEventListener('load', async () => {
       box.innerHTML = '<div class="pedv3-empty">No hay pedidos para este filtro.</div>';
       return;
     }
-    box.innerHTML = `
-      <table class="pedv3-table">
-        <thead>
-          <tr>
-            <th>Entrada</th><th>Tienda</th><th>Pieza</th><th>Uds</th><th>Proveedor</th>
-            ${isAdmin() ? '<th>Compra</th><th>Logística</th>' : ''}
-            <th>Reparación</th><th>Nota</th><th>Estado</th>${isAdmin() ? '<th>Acción</th>' : ''}
-          </tr>
-        </thead>
-        <tbody>${state.pedidos.map(renderPedidoRow).join('')}</tbody>
-      </table>
-    `;
+    const adminHead = `
+      <div class="pedv3-order-head">
+        <span>Entrada</span><span>Tienda</span><span>Pieza</span><span>Uds</span><span>Proveedor</span>
+        <span>Compra</span><span>Logística</span><span>Reparación</span><span>Nota</span><span>Estado</span><span>Acción</span>
+      </div>`;
+    const shopHead = `
+      <div class="pedv3-order-head pedv3-shop-row">
+        <span>Entrada</span><span>Tienda</span><span>Pieza</span><span>Uds</span><span>Proveedor</span>
+        <span>Reparación</span><span>Nota</span><span>Estado</span>
+      </div>`;
+    box.innerHTML = `<div class="pedv3-order-list">${isAdmin() ? adminHead : shopHead}${state.pedidos.map(renderPedidoRow).join('')}</div>`;
   }
 
   function renderPedidoRow(p) {
@@ -4335,31 +4345,31 @@ window.addEventListener('load', async () => {
     ].filter(Boolean).join('<br>') || '-';
     if (!isAdmin()) {
       return `
-        <tr>
-          <td><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></td>
-          <td><div class="pedv3-store">${escHTML(p.tienda_origen)}</div></td>
-          <td><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div></td>
-          <td><span class="pedv3-chip">${Number(p.unidades || 0)} uds</span></td>
-          <td>${escHTML(p.proveedor || '-')}</td>
-          <td>${detalle}</td>
-          <td>${escHTML(p.observaciones || '-')}</td>
-          <td><span class="pedv3-status pedv3-st-${escHTML(p.estado)}">${escHTML(statusLabel(p.estado))}</span></td>
-        </tr>`;
+        <div class="pedv3-order-row pedv3-shop-row">
+          <div><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></div>
+          <div class="pedv3-store">${escHTML(p.tienda_origen)}</div>
+          <div><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div></div>
+          <div><span class="pedv3-chip">${Number(p.unidades || 0)} uds</span></div>
+          <div>${escHTML(p.proveedor || '-')}</div>
+          <div>${detalle}</div>
+          <div>${escHTML(p.observaciones || '-')}</div>
+          <div><span class="pedv3-status pedv3-st-${escHTML(p.estado)}">${escHTML(statusLabel(p.estado))}</span></div>
+        </div>`;
     }
     return `
-      <tr class="${p.estado === 'pendiente' ? 'pedv3-row-new' : ''}">
-        <td><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></td>
-        <td><div class="pedv3-store">${escHTML(p.tienda_origen)}</div></td>
-        <td><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div>${p.pvp_reparacion ? `<div class="pedv3-meta">PVP reparación: ${money(p.pvp_reparacion)} €</div>` : ''}</td>
-        <td><span class="pedv3-chip">${Number(p.unidades || 0)} uds</span></td>
-        <td><input class="pedv3-provider" id="pedv3-prov-${p.id}" value="${escHTML(p.proveedor || '')}"></td>
-        <td><input class="pedv3-num" id="pedv3-coste-${p.id}" type="number" step="0.01" value="${money(p.coste_gsm)}"></td>
-        <td><input class="pedv3-num" id="pedv3-log-${p.id}" type="number" step="0.01" value="${money(p.logistica_gsm || p.logistica_interna)}"></td>
-        <td>${detalle}</td>
-        <td><textarea id="pedv3-obs-${p.id}">${escHTML(p.observaciones || '')}</textarea></td>
-        <td><select id="pedv3-estado-${p.id}">${options(ESTADOS_PEDIDOS, p.estado)}</select>${p.fecha_realizado ? `<br><span class="muted">${formatDate(p.fecha_realizado)}</span>` : ''}</td>
-        <td><button class="btn btn-p" type="button" onclick="PedidosV3.save(${p.id})">Guardar</button></td>
-      </tr>`;
+      <div class="pedv3-order-row ${p.estado === 'pendiente' ? 'pedv3-row-new' : ''}">
+        <div><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></div>
+        <div class="pedv3-store">${escHTML(p.tienda_origen)}</div>
+        <div><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div>${p.pvp_reparacion ? `<div class="pedv3-meta">PVP reparación: ${money(p.pvp_reparacion)} €</div>` : ''}</div>
+        <div><span class="pedv3-chip">${Number(p.unidades || 0)} uds</span></div>
+        <div><input id="pedv3-prov-${p.id}" value="${escHTML(p.proveedor || '')}"></div>
+        <div><input class="pedv3-num" id="pedv3-coste-${p.id}" type="number" step="0.01" placeholder="-" value="${moneyInput(p.coste_gsm)}"></div>
+        <div><input class="pedv3-num" id="pedv3-log-${p.id}" type="number" step="0.01" placeholder="-" value="${moneyInput(p.logistica_gsm || p.logistica_interna)}"></div>
+        <div>${detalle}</div>
+        <div><textarea id="pedv3-obs-${p.id}" placeholder="-">${escHTML(p.observaciones || '')}</textarea></div>
+        <div><select id="pedv3-estado-${p.id}">${options(ESTADOS_PEDIDOS, p.estado)}</select>${p.fecha_realizado ? `<div class="pedv3-meta">${formatDate(p.fecha_realizado)}</div>` : ''}</div>
+        <div><button class="btn btn-p pedv3-action" type="button" onclick="PedidosV3.save(${p.id})">Guardar</button></div>
+      </div>`;
   }
 
   async function savePedido(id) {
@@ -4415,6 +4425,7 @@ window.addEventListener('load', async () => {
   async function boot() {
     renderShell();
     await loadUser();
+    renderShell();
     await loadPedidos({ manual: true });
     startPedidosAutoRefresh();
   }
@@ -4422,7 +4433,7 @@ window.addEventListener('load', async () => {
   window.addEventListener('save-role-change', async (ev) => {
     state.role = ev.detail?.role || state.role;
     await loadUser();
-    syncRoleUi();
+    renderShell();
     await loadPedidos({ manual: true });
     startPedidosAutoRefresh();
   });
