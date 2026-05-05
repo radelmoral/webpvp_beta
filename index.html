@@ -3896,13 +3896,22 @@ window.addEventListener('load', async () => {
 </script>
 <style>
 .pedv3-shell { max-width:1680px; margin:0 auto; padding:16px; background:#f6f8fb; }
-.pedv3-head { display:grid; grid-template-columns:minmax(260px,1fr) minmax(420px,620px); align-items:start; gap:14px; margin-bottom:12px; }
+.pedv3-head { display:grid; grid-template-columns:minmax(260px,1fr) minmax(520px,760px); align-items:start; gap:14px; margin-bottom:12px; }
 .pedv3-title h1 { font-size:22px; font-weight:900; color:var(--g900); letter-spacing:0; }
 .pedv3-title p { color:var(--g500); font-size:12px; margin-top:3px; max-width:720px; }
-.pedv3-kpis { display:grid; grid-template-columns:repeat(4,minmax(96px,1fr)); gap:8px; min-width:0; }
+.pedv3-kpis { display:grid; grid-template-columns:repeat(5,minmax(92px,1fr)); gap:8px; min-width:0; }
 .pedv3-kpi { background:var(--white); border:1px solid #dbe3ec; border-radius:8px; padding:9px 11px; min-width:92px; box-shadow:0 8px 22px rgba(15,23,42,.04); }
 .pedv3-kpi span { display:block; color:var(--g500); font-size:11px; font-weight:700; text-transform:uppercase; }
 .pedv3-kpi strong { display:block; color:var(--g900); font-size:20px; line-height:1.1; margin-top:2px; }
+.pedv3-kpi-total { background:#f8fafc; border-color:#dbe3ec; }
+.pedv3-kpi-pendiente { background:#fff7ed; border-color:#fed7aa; }
+.pedv3-kpi-pendiente strong { color:#c2410c; }
+.pedv3-kpi-pedido { background:#ecfdf5; border-color:#bbf7d0; }
+.pedv3-kpi-pedido strong { color:#15803d; }
+.pedv3-kpi-sin-stock { background:#fefce8; border-color:#fde68a; }
+.pedv3-kpi-sin-stock strong { color:#a16207; }
+.pedv3-kpi-cancelado { background:#fef2f2; border-color:#fecaca; }
+.pedv3-kpi-cancelado strong { color:#b91c1c; }
 .pedv3-grid { display:grid; grid-template-columns:340px minmax(0,1fr); gap:16px; align-items:start; }
 .pedv3-grid.pedv3-admin-grid { grid-template-columns:1fr; }
 .pedv3-card { background:var(--white); border:1px solid #dbe3ec; border-radius:8px; box-shadow:0 14px 36px rgba(15,23,42,.06); overflow:hidden; }
@@ -3934,11 +3943,14 @@ window.addEventListener('load', async () => {
 .pedv3-filters input { min-width:240px; flex:1; }
 .pedv3-table-wrap { overflow:visible; max-height:none; background:#f6f8fb; }
 .pedv3-order-list { display:flex; flex-direction:column; gap:6px; padding:8px; }
-.pedv3-order-head, .pedv3-order-row { display:grid; grid-template-columns:74px 124px minmax(170px,1.5fr) 56px minmax(122px,.8fr) 84px 84px 112px minmax(150px,1fr) 116px 72px; gap:7px; align-items:center; }
+.pedv3-order-head, .pedv3-order-row { display:grid; grid-template-columns:74px 124px minmax(160px,1.25fr) 54px minmax(112px,.72fr) 78px 78px minmax(180px,1.15fr) minmax(135px,.85fr) 112px 70px; gap:7px; align-items:center; }
 .pedv3-order-head { position:sticky; top:0; z-index:2; padding:7px 9px; color:var(--g500); font-size:10px; font-weight:900; text-transform:uppercase; background:#eef3f7; border:1px solid #dbe3ec; border-radius:7px; }
 .pedv3-order-row { min-height:54px; padding:7px 9px; background:#fff; border:1px solid #dbe3ec; border-radius:8px; box-shadow:0 6px 16px rgba(15,23,42,.035); }
 .pedv3-order-row:hover { border-color:#b9c7d6; box-shadow:0 10px 24px rgba(15,23,42,.07); }
-.pedv3-order-row.pedv3-row-new { border-left:4px solid #0f766e; background:#f4fffc; }
+.pedv3-order-row.pedv3-row-pendiente { border-left:4px solid #fb923c; background:#fff7ed; }
+.pedv3-order-row.pedv3-row-pedido { border-left:4px solid #22c55e; background:#f0fdf4; }
+.pedv3-order-row.pedv3-row-sin_stock { border-left:4px solid #eab308; background:#fefce8; }
+.pedv3-order-row.pedv3-row-cancelado { border-left:4px solid #ef4444; background:#fef2f2; }
 .pedv3-shop-row { display:grid; grid-template-columns:80px minmax(125px,1fr) minmax(190px,1.6fr) 58px minmax(132px,1fr) minmax(120px,1fr) minmax(150px,1.1fr) 112px; }
 .pedv3-order-row input, .pedv3-order-row select, .pedv3-order-row textarea { width:100%; border:1px solid #d7e0e9; border-radius:6px; padding:6px 7px; font-size:12px; background:#fff; outline:none; }
 .pedv3-order-row input:focus, .pedv3-order-row select:focus, .pedv3-order-row textarea:focus { border-color:#0f766e; box-shadow:0 0 0 3px rgba(15,118,110,.12); }
@@ -3952,13 +3964,13 @@ window.addEventListener('load', async () => {
 .pedv3-num { text-align:right; }
 .pedv3-action { min-width:0; padding-inline:8px; justify-content:center; }
 .pedv3-status { display:inline-flex; align-items:center; border-radius:999px; padding:4px 8px; font-size:11px; font-weight:850; text-transform:uppercase; white-space:nowrap; }
-.pedv3-st-pendiente { background:#fef3c7; color:#92400e; }
+.pedv3-st-pendiente { background:#ffedd5; color:#c2410c; }
 .pedv3-st-pedido { background:#dcfce7; color:#166534; }
 .pedv3-st-cancelado { background:#fee2e2; color:#991b1b; }
-.pedv3-st-sin_stock { background:#e0f2fe; color:#075985; }
+.pedv3-st-sin_stock { background:#fef9c3; color:#854d0e; }
 .pedv3-empty { padding:50px 16px; text-align:center; color:var(--g500); }
 .pedv3-admin-note { color:var(--g500); font-size:12px; line-height:1.4; }
-@media (max-width: 1380px) { .pedv3-order-head, .pedv3-order-row { grid-template-columns:72px 112px minmax(150px,1.4fr) 52px minmax(110px,.75fr) 76px 76px 104px minmax(120px,1fr) 106px 68px; gap:5px; } .pedv3-order-row input, .pedv3-order-row select, .pedv3-order-row textarea { font-size:11px; padding:5px 6px; } }
+@media (max-width: 1380px) { .pedv3-order-head, .pedv3-order-row { grid-template-columns:70px 108px minmax(145px,1.15fr) 48px minmax(100px,.65fr) 70px 70px minmax(150px,1fr) minmax(112px,.75fr) 102px 64px; gap:5px; } .pedv3-order-row input, .pedv3-order-row select, .pedv3-order-row textarea { font-size:11px; padding:5px 6px; } }
 @media (max-width: 1180px) { .pedv3-grid { grid-template-columns:1fr; } .pedv3-kpis { min-width:0; width:100%; } .pedv3-head { grid-template-columns:1fr; } .pedv3-order-head { display:none; } .pedv3-order-row { grid-template-columns:1fr 1fr; align-items:start; } }
 @media (max-width: 720px) { .pedv3-shell { padding:14px; } .pedv3-head, .pedv3-workbar { flex-direction:column; align-items:stretch; } .pedv3-kpis { grid-template-columns:repeat(2,1fr); } }
 </style>
@@ -4030,10 +4042,11 @@ window.addEventListener('load', async () => {
             <p>Alta, seguimiento y gestión de compras en MariaDB. El panel se refresca automáticamente para que el admin vea pedidos nuevos sin recargar la página.</p>
           </div>
           <div class="pedv3-kpis">
-            <div class="pedv3-kpi"><span>Total</span><strong id="pedv3-kpi-total">0</strong></div>
-            <div class="pedv3-kpi"><span>Pendientes</span><strong id="pedv3-kpi-pendiente">0</strong></div>
-            <div class="pedv3-kpi"><span>Pedidos</span><strong id="pedv3-kpi-pedido">0</strong></div>
-            <div class="pedv3-kpi"><span>Incidencias</span><strong id="pedv3-kpi-incidencias">0</strong></div>
+            <div class="pedv3-kpi pedv3-kpi-total"><span>Total</span><strong id="pedv3-kpi-total">0</strong></div>
+            <div class="pedv3-kpi pedv3-kpi-pendiente"><span>Pendientes</span><strong id="pedv3-kpi-pendiente">0</strong></div>
+            <div class="pedv3-kpi pedv3-kpi-pedido"><span>Realizados</span><strong id="pedv3-kpi-pedido">0</strong></div>
+            <div class="pedv3-kpi pedv3-kpi-sin-stock"><span>Sin stock</span><strong id="pedv3-kpi-sin-stock">0</strong></div>
+            <div class="pedv3-kpi pedv3-kpi-cancelado"><span>Cancelados</span><strong id="pedv3-kpi-cancelado">0</strong></div>
           </div>
         </div>
 
@@ -4313,7 +4326,8 @@ window.addEventListener('load', async () => {
     byId('pedv3-kpi-total').textContent = state.resumen.total || 0;
     byId('pedv3-kpi-pendiente').textContent = state.resumen.estados?.pendiente || 0;
     byId('pedv3-kpi-pedido').textContent = state.resumen.estados?.pedido || 0;
-    byId('pedv3-kpi-incidencias').textContent = Number(state.resumen.estados?.cancelado || 0) + Number(state.resumen.estados?.sin_stock || 0);
+    byId('pedv3-kpi-sin-stock').textContent = state.resumen.estados?.sin_stock || 0;
+    byId('pedv3-kpi-cancelado').textContent = state.resumen.estados?.cancelado || 0;
   }
 
   function renderTable() {
@@ -4335,7 +4349,19 @@ window.addEventListener('load', async () => {
         <span>Entrada</span><span>Tienda</span><span>Pieza</span><span>Uds</span><span>Proveedor</span>
         <span>Reparación</span><span>Nota</span><span>Estado</span>
       </div>`;
-    box.innerHTML = `<div class="pedv3-order-list">${isAdmin() ? adminHead : shopHead}${state.pedidos.map(renderPedidoRow).join('')}</div>`;
+    const rows = isAdmin() ? sortedPedidosForAdmin(state.pedidos) : state.pedidos;
+    box.innerHTML = `<div class="pedv3-order-list">${isAdmin() ? adminHead : shopHead}${rows.map(renderPedidoRow).join('')}</div>`;
+  }
+
+  function sortedPedidosForAdmin(pedidos) {
+    return [...pedidos].sort((a, b) => {
+      const tienda = String(a.tienda_origen || '').localeCompare(String(b.tienda_origen || ''), 'es', { sensitivity: 'base' });
+      if (tienda !== 0) return tienda;
+      const fechaA = new Date(a.fecha_envio || a.created_at || 0).getTime() || 0;
+      const fechaB = new Date(b.fecha_envio || b.created_at || 0).getTime() || 0;
+      if (fechaA !== fechaB) return fechaB - fechaA;
+      return Number(b.id || 0) - Number(a.id || 0);
+    });
   }
 
   function renderPedidoRow(p) {
@@ -4345,7 +4371,7 @@ window.addEventListener('load', async () => {
     ].filter(Boolean).join('<br>') || '-';
     if (!isAdmin()) {
       return `
-        <div class="pedv3-order-row pedv3-shop-row">
+        <div class="pedv3-order-row pedv3-shop-row pedv3-row-${escHTML(p.estado || 'pendiente')}">
           <div><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></div>
           <div class="pedv3-store">${escHTML(p.tienda_origen)}</div>
           <div><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div></div>
@@ -4357,7 +4383,7 @@ window.addEventListener('load', async () => {
         </div>`;
     }
     return `
-      <div class="pedv3-order-row ${p.estado === 'pendiente' ? 'pedv3-row-new' : ''}">
+      <div class="pedv3-order-row pedv3-row-${escHTML(p.estado || 'pendiente')}">
         <div><div class="pedv3-date">${formatDate(p.fecha_envio)}</div><div class="pedv3-meta">${escHTML(p.hora_envio || '')}</div></div>
         <div class="pedv3-store">${escHTML(p.tienda_origen)}</div>
         <div><div class="pedv3-mainref">${escHTML(p.referencia)}</div><div class="pedv3-desc">${escHTML(p.etiqueta || '')}</div>${p.pvp_reparacion ? `<div class="pedv3-meta">PVP reparación: ${money(p.pvp_reparacion)} €</div>` : ''}</div>
