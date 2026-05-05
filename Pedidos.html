@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVE PVP — Gestión de Pedidos</title>
+    
+    <!-- React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SheetJS para Excel Local -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    
+    <!-- Tailwind config: remap blue → SAVE teal -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              blue: {
+                50:  '#e6f9f8',
+                100: '#ccf2ef',
+                200: '#99e5df',
+                300: '#66d8cf',
+                400: '#33cbbf',
+                500: '#00BFB3',
+                600: '#00BFB3',
+                700: '#009e92',
+                800: '#007a70',
+                900: '#005a52',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        :root {
+          --save:     #00BFB3;
+          --save-dk:  #009e92;
+          --save-xlt: #e6f9f8;
+          --g900: #111827; --g700: #374151; --g500: #6b7280;
+          --g200: #e5e7eb; --g100: #f3f4f6;
+        }
+        body {
+          background-color: var(--g100);
+          font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+          color: var(--g900);
+        }
+        /* Cabecera: sustituir gradiente azul por SAVE */
+        .bg-gradient-to-r.from-blue-600.to-cyan-600 {
+          background: linear-gradient(to right, #009e92, #00BFB3) !important;
+        }
+        /* Botones primarios */
+        .bg-blue-600, .hover\:bg-blue-700:hover { background-color: var(--save) !important; }
+        .bg-blue-600:hover { background-color: var(--save-dk) !important; }
+        /* Focus rings */
+        .focus\:ring-blue-500:focus { --tw-ring-color: var(--save) !important; }
+        /* Textos azules */
+        .text-blue-600 { color: var(--save) !important; }
+        .text-blue-700 { color: var(--save-dk) !important; }
+        .text-blue-800 { color: #005a52 !important; }
+        .text-blue-500 { color: var(--save) !important; }
+        /* Fondos azules claros */
+        .bg-blue-50  { background-color: var(--save-xlt) !important; }
+        .bg-blue-100 { background-color: #ccf2ef !important; }
+        /* Badges / pills azules */
+        .bg-blue-100.text-blue-800 { background-color: #ccf2ef !important; color: #005a52 !important; }
+        /* Border accent en header card */
+        .border-blue-500 { border-color: var(--save) !important; }
+        /* Select con fondo azul */
+        .bg-blue-50.text-blue-900 { background-color: var(--save-xlt) !important; color: #005a52 !important; }
+        /* Animaciones */
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+        .slide-down { transition: all 0.3s ease-out; overflow: hidden; max-height: 0; opacity: 0; }
+        .slide-down.open { max-height: 100px; opacity: 1; margin-top: 0.5rem; }
+        .toggle-checkbox:checked { right: 0; border-color: #68D391; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <script type="text/babel">
+        try {
+            const { useState, useEffect } = React;
+
+            // --- Configuración ---
+            const DEFAULT_WEBHOOK_URL = "https://n8n-n8n.ajvss9.easypanel.host/webhook/pedidossave";
+            const SETTINGS_PASSWORD = "S@ve2025!"; 
+
+            const TIENDAS = [
+                "ECI Alicante", "ECI Bilbao", "ECI Callao", "ECI Castellana", "ECI Diagonal", 
+                "ECI Goya", "ECI Las Palmas", "ECI Malaga", "ECI Mallorca", "ECI Marbella", "ECI Murcia", 
+                "ECI Pamplona", "ECI Plaza Cataluña", "ECI Pozuelo", "ECI Princesa", 
+                "ECI Sanchinarro", "ECI Santander", "ECI Sevilla", "ECI Valencia", 
+                "SAVE El Paseo", "SAVE Fan Mallorca", "SAVE General Ricardos", "SAVE La Sierra", "SaveLab"
+            ];
+            TIENDAS.sort();
+            const PROVEEDORES = ["GSMParts", "Ecommerce", "Stock red", "PreciosAdictos", "Esmovil", "Apple"];
+
+            // --- Iconos ---
+            const Icon = ({ children, className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>;
+            const Plus = ({ className }) => <Icon className={className}><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></Icon>;
+            const Trash2 = ({ className }) => <Icon className={className}><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></Icon>;
+            const Save = ({ className }) => <Icon className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></Icon>;
+            const Settings = ({ className }) => <Icon className={className}><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></Icon>;
+
+            function App() {
+                const [items, setItems] = useState([]);
+                const [loading, setLoading] = useState(false);
+                const [showSettings, setShowSettings] = useState(false);
+                const [statusLog, setStatusLog] = useState(""); 
+                const [currentWebhookUrl, setCurrentWebhookUrl] = useState(localStorage.getItem('cloud_webhook_url') || DEFAULT_WEBHOOK_URL);
+                
+                const [formData, setFormData] = useState({ 
+                    tienda: '', referencia: '', etiqueta: '', unidades: '', 
+                    pvpReparacion: '', proveedorTipo: '', proveedorStockTienda: '', 
+                    observaciones: '', esTerminalTienda: false, esDeposito15: false, 
+                    numeroPresupuesto: '', numeroFactura: ''
+                });
+
+                const handleSettingsClick = () => {
+                    const password = prompt("Introduce la contraseña de administrador:");
+                    if (password === SETTINGS_PASSWORD) setShowSettings(true);
+                    else if (password !== null) alert("Contraseña incorrecta.");
+                };
+
+                const handleConfigSave = (e) => {
+                    e.preventDefault();
+                    const newUrl = e.target.url.value.trim();
+                    if (newUrl) {
+                        setCurrentWebhookUrl(newUrl);
+                        localStorage.setItem('cloud_webhook_url', newUrl);
+                        setStatusLog("Nueva URL guardada.");
+                        alert("✅ Configuración guardada.");
+                        setShowSettings(false);
+                    } else alert("La URL no puede estar vacía.");
+                };
+
+                const handleResetConfig = () => {
+                    if(confirm("¿Restaurar URL original?")) {
+                        setCurrentWebhookUrl(DEFAULT_WEBHOOK_URL);
+                        localStorage.removeItem('cloud_webhook_url');
+                        alert("Restaurado.");
+                        setShowSettings(false);
+                    }
+                };
+
+                // Helper para actualizar form de forma segura
+                const updateForm = (field, value) => {
+                    setFormData(prev => ({ ...prev, [field]: value }));
+                };
+
+                const handleCheckboxChange = (name) => {
+                    setFormData(prev => {
+                        if (name === 'terminal') return { ...prev, esTerminalTienda: !prev.esTerminalTienda };
+                        if (name === 'deposito') return { ...prev, esDeposito15: !prev.esDeposito15 };
+                        return prev;
+                    });
+                };
+
+                const handleAddItem = (e) => {
+                    e.preventDefault();
+                    
+                    if (!formData.tienda) return alert("Falta: TIENDA DE ORIGEN.");
+                    if (!formData.proveedorTipo) return alert("Falta: PROVEEDOR.");
+                    if (formData.proveedorTipo === 'Stock red' && !formData.proveedorStockTienda) return alert("Falta: Tienda de procedencia del Stock.");
+                    if (!formData.referencia || !formData.unidades) return alert("Faltan datos del producto.");
+                    if (!formData.pvpReparacion) return alert("Falta: PVP Reparación."); 
+                    
+                    if (!formData.esTerminalTienda && !formData.esDeposito15) {
+                        return alert("⚠️ Debes marcar al menos una opción:\n- Terminal en Tienda\n- Depósito 15%");
+                    }
+
+                    if (formData.esTerminalTienda && !formData.esDeposito15 && !formData.numeroPresupuesto) return alert("Indica el Nº de Presupuesto.");
+                    if (formData.esDeposito15 && !formData.numeroFactura) return alert("Indica el Nº de Factura.");
+
+                    let proveedorFinal = formData.proveedorTipo === 'Stock red' ? `Stock red - ${formData.proveedorStockTienda}` : formData.proveedorTipo;
+
+                    // Crear objeto con valores actuales (copia profunda de valores primitivos)
+                    const newItem = {
+                        id: Date.now() + Math.random(), // ID único robusto
+                        tienda: formData.tienda,
+                        referencia: formData.referencia,
+                        etiqueta: formData.etiqueta,
+                        unidades: formData.unidades,
+                        pvpReparacion: formData.pvpReparacion, 
+                        proveedor: proveedorFinal, 
+                        observaciones: formData.observaciones,
+                        terminalTienda: formData.esTerminalTienda ? 'Sí' : 'No',
+                        deposito15: formData.esDeposito15 ? 'Sí' : 'No', 
+                        // Lógica de guardado
+                        numeroPresupuesto: (formData.esTerminalTienda && !formData.esDeposito15) ? formData.numeroPresupuesto : '',
+                        numeroFactura: formData.esDeposito15 ? formData.numeroFactura : ''
+                    };
+
+                    setItems(prev => [...prev, newItem]);
+                    
+                    // Resetear campos específicos
+                    setFormData(prev => ({ 
+                        ...prev, 
+                        referencia: '', etiqueta: '', unidades: '', pvpReparacion: '', observaciones: '',
+                        esTerminalTienda: false, esDeposito15: false, numeroPresupuesto: '', numeroFactura: ''
+                    }));
+                    document.getElementById('referencia').focus();
+                };
+
+                const handleDeleteItem = (id) => setItems(prev => prev.filter(item => item.id !== id));
+
+                const getPayload = () => ({
+                    fecha_envio: new Date().toLocaleDateString('es-ES'),
+                    hora_envio: new Date().toLocaleTimeString('es-ES'),
+                    total_lineas: items.length,
+                    items: items
+                });
+
+                const handleProcess = async () => {
+                    if (items.length === 0) return alert("El pedido está vacío.");
+                    if(!confirm(`¿Enviar ${items.length} líneas de pedido al Servidor?`)) return;
+
+                    setLoading(true);
+                    setStatusLog("Iniciando envío...");
+
+                    try {
+                        const payload = getPayload();
+                        setStatusLog("Enviando datos al Servidor...");
+                        
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = currentWebhookUrl; 
+                        form.target = 'hidden_iframe'; 
+                        form.style.display = 'none';
+
+                        const input = document.createElement('input');
+                        input.name = 'json_payload'; 
+                        input.value = JSON.stringify(payload);
+                        form.appendChild(input);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                        document.body.removeChild(form);
+
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                        setStatusLog("¡Datos enviados!");
+
+                        setStatusLog("Creando Excel local...");
+                        const wsData = items.map(item => ({ 
+                            "Tienda Origen": item.tienda,
+                            "Referencia": item.referencia, 
+                            "Etiqueta": item.etiqueta, 
+                            "Unidades": Number(item.unidades), 
+                            "PVP Reparación": Number(item.pvpReparacion), 
+                            "Proveedor": item.proveedor,
+                            "Terminal en Tienda": item.terminalTienda,
+                            "Nº Presupuesto": item.numeroPresupuesto,
+                            "Depósito 15%": item.deposito15, 
+                            "Nº Factura": item.numeroFactura,
+                            "Observaciones": item.observaciones
+                        }));
+                        const wb = XLSX.utils.book_new();
+                        const ws = XLSX.utils.json_to_sheet(wsData);
+                        ws['!cols'] = [{wch: 20}, {wch: 15}, {wch: 30}, {wch: 8}, {wch: 12}, {wch: 25}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 30}];
+                        XLSX.utils.book_append_sheet(wb, ws, "Pedido");
+                        
+                        const fileName = `Copia_Local_Pedido_${new Date().toISOString().split('T')[0]}_${Date.now()}.xlsx`;
+                        XLSX.writeFile(wb, fileName);
+
+                        setStatusLog("Finalizado.");
+                        alert("✅ ¡PEDIDO ENVIADO!\n\nDatos enviados y copia descargada.");
+
+                        if(confirm("¿Deseas limpiar la lista?")) {
+                            setItems([]);
+                            setStatusLog("");
+                        }
+                    } catch (error) {
+                        setStatusLog("Error: " + error.message);
+                        alert("❌ Error: " + error.message);
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+
+                return (
+                    <div className="min-h-screen flex flex-col items-center py-10 px-4">
+                        {showSettings && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full">
+                                    <h3 className="text-xl font-bold mb-4 flex items-center text-blue-700"><Settings className="mr-2"/> Configuración Protegida</h3>
+                                    <form onSubmit={handleConfigSave}>
+                                        <label className="text-xs font-bold text-gray-600">Webhook URL</label>
+                                        <input name="url" defaultValue={currentWebhookUrl} className="w-full border p-2 rounded text-sm mb-2 bg-white text-gray-800 outline-none" />
+                                        <div className="flex justify-between items-center mt-4">
+                                            <button type="button" onClick={handleResetConfig} className="text-xs text-blue-500 underline">Restaurar original</button>
+                                            <div className="space-x-2">
+                                                <button type="button" onClick={()=>setShowSettings(false)} className="px-3 py-2 bg-gray-200 rounded text-sm font-bold">Cancelar</button>
+                                                <button type="submit" className="px-3 py-2 bg-blue-600 text-white rounded text-sm font-bold">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="max-w-6xl w-full bg-white rounded-xl shadow-lg mb-6 overflow-hidden border-b-4 border-blue-500">
+                            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-6 flex justify-between items-center text-white">
+                                <div className="flex items-center">
+                                    <img src="save_logo.png" alt="Logo SAVE" className="h-12 w-auto mr-4 rounded-md object-contain bg-white p-1 shadow-sm" onError={(e)=>{e.target.style.display='none'}} />
+                                    <div><h1 className="text-2xl font-bold">Gestión de Pedidos</h1></div>
+                                </div>
+                                <button onClick={handleSettingsClick} className="p-2 hover:bg-white/20 rounded-full transition opacity-50 hover:opacity-100"><Settings className="h-6 w-6 text-white" /></button>
+                            </div>
+                        </div>
+
+                        <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-1 space-y-6">
+                                <div className="bg-white rounded-xl shadow-md p-6">
+                                    <h2 className="font-semibold mb-4 flex items-center text-gray-800"><Plus className="h-5 w-5 mr-2 text-blue-600"/> Añadir Producto</h2>
+                                    <form onSubmit={handleAddItem} className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1 ml-1">TIENDA QUE PIDE (ORIGEN)</label>
+                                            <select value={formData.tienda} onChange={(e)=>updateForm('tienda', e.target.value)} className="w-full border p-2 pl-3 rounded outline-none focus:ring-2 focus:ring-blue-500 transition bg-blue-50 text-blue-900 font-bold">
+                                                <option value="">-- Selecciona tu Tienda --</option>
+                                                {TIENDAS.map(t => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div className="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <label className="block text-xs font-bold text-gray-500 mb-1 ml-1">PROVEEDOR</label>
+                                            <select value={formData.proveedorTipo} onChange={(e)=>setFormData(prev => ({...prev, proveedorTipo: e.target.value, proveedorStockTienda: ''}))} className="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500 bg-white mb-1">
+                                                <option value="">-- Selecciona Proveedor --</option>
+                                                {PROVEEDORES.map(p => <option key={p} value={p}>{p}</option>)}
+                                            </select>
+                                            <div className={`slide-down ${formData.proveedorTipo === 'Stock red' ? 'open' : ''}`}>
+                                                <label className="block text-xs font-bold text-red-500 mb-1 ml-1 mt-2">¿De qué tienda viene el stock?</label>
+                                                <select value={formData.proveedorStockTienda} onChange={(e)=>updateForm('proveedorStockTienda', e.target.value)} className="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-red-500 bg-white border-red-200">
+                                                    <option value="">-- Selecciona Tienda --</option>
+                                                    {TIENDAS.map(t => <option key={t} value={t}>{t}</option>)}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <input value={formData.referencia} onChange={(e)=>updateForm('referencia', e.target.value)} id="referencia" className="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="Referencia" />
+                                        <input value={formData.etiqueta} onChange={(e)=>updateForm('etiqueta', e.target.value)} className="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="Descripción / Etiqueta" />
+                                        
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label className="block text-xs text-gray-500 mb-1 ml-1">Unidades</label>
+                                                <input type="number" value={formData.unidades} onChange={(e)=>updateForm('unidades', e.target.value)} className="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs text-gray-500 mb-1 ml-1">PVP Reparación</label>
+                                                <input type="number" value={formData.pvpReparacion} onChange={(e)=>updateForm('pvpReparacion', e.target.value)} className="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00 €" />
+                                            </div>
+                                        </div>
+
+                                        <div className={`p-3 rounded border border-indigo-100 space-y-3 transition duration-300 ${(!formData.esTerminalTienda && !formData.esDeposito15) ? 'bg-red-50 border-red-200' : 'bg-indigo-50 border-indigo-100'}`}>
+                                            <div className="flex items-center space-x-4">
+                                                <label className="flex items-center space-x-2 cursor-pointer"><input type="checkbox" checked={formData.esTerminalTienda} onChange={() => handleCheckboxChange('terminal')} className="form-checkbox h-4 w-4 text-blue-600"/><span className="text-xs font-bold text-gray-700">Terminal en tienda</span></label>
+                                                <label className="flex items-center space-x-2 cursor-pointer"><input type="checkbox" checked={formData.esDeposito15} onChange={() => handleCheckboxChange('deposito')} className="form-checkbox h-4 w-4 text-blue-600"/><span className="text-xs font-bold text-gray-700">Depósito 15%</span></label>
+                                            </div>
+                                            
+                                            <div className={`slide-down ${formData.esTerminalTienda && !formData.esDeposito15 ? 'open' : ''}`}>
+                                                <input value={formData.numeroPresupuesto} onChange={(e)=>updateForm('numeroPresupuesto', e.target.value)} className="w-full border p-2 rounded text-sm bg-white focus:ring-2 focus:ring-indigo-500" placeholder="Nº Presupuesto (Requerido)"/>
+                                            </div>
+                                            <div className={`slide-down ${formData.esDeposito15 ? 'open' : ''}`}>
+                                                <input value={formData.numeroFactura} onChange={(e)=>updateForm('numeroFactura', e.target.value)} className="w-full border p-2 rounded text-sm bg-white focus:ring-2 focus:ring-indigo-500" placeholder="Nº Factura (Requerido)"/>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1 ml-1">OBSERVACIONES</label>
+                                            <textarea value={formData.observaciones} onChange={(e)=>updateForm('observaciones', e.target.value)} className="w-full border p-2 rounded h-20 text-sm resize-none" placeholder="Notas..."/>
+                                        </div>
+
+                                        <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-bold shadow flex justify-center items-center"><Plus className="mr-2 h-5 w-5"/> Añadir a lista</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-2 flex flex-col bg-white rounded-xl shadow-md overflow-hidden">
+                                <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
+                                    <h2 className="font-semibold flex items-center text-gray-700">Resumen <span className="ml-2 bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">{items.length}</span></h2>
+                                </div>
+                                <div className="flex-grow overflow-auto p-0 min-h-[400px]">
+                                    {items.length === 0 ? <div className="h-full flex flex-col items-center justify-center text-gray-400 opacity-50"><span className="text-4xl mb-2">🛒</span>Lista vacía</div> : 
+                                        <table className="min-w-full divide-y divide-gray-200">
+                                            <thead className="bg-gray-50 sticky top-0 z-10">
+                                                <tr>
+                                                    <th className="px-4 py-3 text-left text-xs text-gray-500 font-bold uppercase">Origen</th>
+                                                    <th className="px-4 py-3 text-left text-xs text-gray-500 uppercase">Producto</th>
+                                                    <th className="px-4 py-3 text-left text-xs text-gray-500 uppercase">Detalles</th>
+                                                    <th className="px-4 py-3 uppercase text-xs text-gray-500">Uds</th>
+                                                    <th className="px-4 py-3 uppercase text-xs text-gray-500">PVP</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y">{items.map(item => (
+                                                <tr key={item.id} className="hover:bg-gray-50 group">
+                                                    <td className="px-4 py-3 text-xs font-bold text-blue-800 bg-blue-50/30 whitespace-nowrap">{item.tienda}</td>
+                                                    <td className="px-4 py-3">
+                                                        <div className="text-sm font-medium text-gray-900">{item.referencia}</div>
+                                                        <div className="text-xs text-gray-500 truncate max-w-[150px]">{item.etiqueta}</div>
+                                                        <div className="text-xs text-gray-400 mt-1 italic">{item.proveedor}</div>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-xs">
+                                                        {item.terminalTienda === 'Sí' && <span className="block mb-1 text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded font-medium">Term. Tienda{item.numeroPresupuesto ? `: ${item.numeroPresupuesto}` : ''}</span>}
+                                                        {item.deposito15 === 'Sí' && <span className="block mb-1 text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded font-medium">Depósito 15%{item.numeroFactura ? `: ${item.numeroFactura}` : ''}</span>}
+                                                        <span className="text-gray-500 italic truncate block max-w-[150px]" title={item.observaciones}>{item.observaciones || '-'}</span>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-sm font-bold text-center">{item.unidades}</td>
+                                                    <td className="px-4 py-3 text-sm font-bold text-green-600 text-center">{item.pvpReparacion}€</td>
+                                                    <td className="px-4 text-right"><button onClick={()=>handleDeleteItem(item.id)} className="text-red-300 hover:text-red-600"><Trash2 className="h-4 w-4"/></button></td>
+                                                </tr>
+                                            ))}</tbody>
+                                        </table>
+                                    }
+                                </div>
+                                <div className="p-4 bg-gray-50 border-t flex justify-between items-center">
+                                    <div className="text-xs text-gray-500 w-1/2">{statusLog}</div>
+                                    <div className="flex space-x-2">
+                                        <button onClick={handleProcess} disabled={items.length===0 || loading} className={`flex items-center px-6 py-3 rounded-lg font-bold text-white shadow-lg transition transform active:scale-95 ${items.length===0 ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}>
+                                            {loading ? "Enviando..." : <span className="flex items-center"><Save className="mr-2 h-5 w-5"/> Enviar pedido</span>}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<App />);
+        } catch (error) {
+            document.body.innerHTML = '<div style="color:red; padding:20px; font-family:sans-serif;"><h1>Error crítico</h1><p>Se ha producido un error al cargar la aplicación:</p><pre>' + error.message + '</pre></div>';
+        }
+    </script>
+</body>
+</html>
